@@ -1,0 +1,33 @@
+body
+{
+    background-color: #070d12;
+    color: #FFFFFF;
+}
+table
+{
+    width: 100%;
+}
+td.extcol
+{
+    width: 20%;
+}
+td.intcol
+{
+    width: 60%;
+}
+div.container
+{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    margin: 1% auto;
+}
+.border
+{
+    border:2px solid white;
+    color: white;
+}
+.canv
+{
+    margin: 2% auto;
+}
