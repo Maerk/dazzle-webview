@@ -102,7 +102,7 @@ function drawMatrix(matrix, tokens)
                     }
                     else
                         token_num.set(pos,1);
-                    rec_mat[i][j] = drawToken(canvas, rec_mat[i][j].pos_x, rec_mat[i][j].pos_y, rec_mat[i][j].width, rec_mat[i][j].height, rec_mat[i][j].color);
+                    rec_mat[i][j] = drawToken(canvas, rec_mat[i][j].pos_x, rec_mat[i][j].pos_y, rec_mat[i][j].width, rec_mat[i][j].height, rec_mat[i][j].color, pos);
                 }
             }
             //disegna players
@@ -168,18 +168,16 @@ function drawGridFromMat(canvas)
             if(!token_num.has(pos))
                 rec_mat[i][j] = drawRect(canvas, w*j, h*i, w, h, rec_mat[i][j].color);
             else
-                rec_mat[i][j] = drawToken(canvas, w*j, h*i, w, h, rec_mat[i][j].color);
+                rec_mat[i][j] = drawToken(canvas, w*j, h*i, w, h, rec_mat[i][j].color, pos);
             drawPlayer(canvas, j, i);
         }
     }
 }
-function drawToken(canvas, pos_x, pos_y, width, height, color)
+function drawToken(canvas, pos_x, pos_y, width, height, color, pos)
 {
-    var pos = "";
-    pos = pos.concat(pos_y, pos_x);
     var ret = drawRect(canvas, pos_x, pos_y, width, height, color);
     drawRect(canvas, pos_x+width*0.2, pos_y+height*0.2, width*0.6, height*0.6, "#FFFFFF");
-    drawText(canvas, token_num.get(pos), pos_x+width*0.2, pos_y+height*0.2+height/2, "#000000");
+    drawText(canvas, token_num.get(pos), pos_x+width*0.47, pos_y+height*0.7, height*0.5, "#000000");
     return ret;
 }
 function drawPlayer(canvas, pos_x, pos_y)
@@ -227,11 +225,12 @@ function drawCircle(canvas, pos_x, pos_y, radius, colors_arr)
         ctx.stroke();
     }
 }
-function drawText(canvas, text, pos_x, pos_y, color)
+function drawText(canvas, text, pos_x, pos_y, pixels, color)
 {
     var ctx = canvas.getContext('2d');
-    ctx.font = '1px sans-serif';
+    ctx.font = (pixels+'px sans-serif');
     ctx.fillStyle = color;
+    ctx.textBaseline = 'alphabetic';
     ctx.fillText(text, pos_x, pos_y);
 }
 function assignColor()
