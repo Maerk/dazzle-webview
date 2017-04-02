@@ -52,18 +52,15 @@ function parseData(data_json)
         disconnect();
         return;
     }
-    if(data_obj.Error != "undefined")
+    if(data_obj === "Ok")
+        return;
+    else if(data_obj.Error !== undefined)
     {
         manageError(data_obj.Error);
         return;
     }
-    if(data_obj == "Ok")
-    {
-        alert("CONNECTED");
-        return;
-    }
-    //init col_mat or clean
 
+    //init col_mat or clean
     for(var i=0; i<data_obj.grid.length; i++)
     {
         if(first_time)
@@ -76,6 +73,8 @@ function parseData(data_json)
                 col_mat[i][j] = []; // clean col_mat
         }
     }
+    //in map_new metto i valori più recenti, alla fine la sostituisco a players
+    var map_new = new Map();
     for(i=0; i<data_obj.players.length; i++)
     {
         var color;
@@ -83,7 +82,7 @@ function parseData(data_json)
         {
             color = assignColor();
             var stat = new Player(data_obj.players[i].name, data_obj.players[i].points, data_obj.players[i].position, color);
-            players.set(data_obj.players[i].id, stat);
+            map_new.set(data_obj.players[i].id, stat);
         }
         else
         {
@@ -93,18 +92,20 @@ function parseData(data_json)
             obj.pos_y = data_obj.players[i].position.y;
             obj.points = data_obj.players[i].points;
             color = obj.color;
-            players.set(data_obj.players[i].id, obj);
+            map_new.set(data_obj.players[i].id, obj);
         }
         //scrivi i colori
         col_mat[data_obj.players[i].position.y][data_obj.players[i].position.x].push(color);
     }
+    //elimino giocatori che si disconnettono
+    players = map_new;
+
     if(first_time)
     {
         //riempio rec_mat
         drawGridInit(document.getElementById("myCan"), data_obj.grid[0].length, data_obj.grid.length, rec_mat);
         first_time = false;
     }
-
     drawMatrix(data_obj.grid, data_obj.tokens);
     destroyTime();
     destroyPoints();

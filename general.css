@@ -9,11 +9,11 @@ table
 }
 td.extcol
 {
-    width: 20%;
+    width: 10%;
 }
 td.intcol
 {
-    width: 60%;
+    width: 80%;
 }
 div.container
 {
@@ -29,5 +29,7 @@ div.container
 }
 .canv
 {
+    width: 100%;
+    height: 100%;
     margin: 2% auto;
 }

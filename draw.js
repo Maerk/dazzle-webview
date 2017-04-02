@@ -2,10 +2,12 @@
 var players = new Map(); //map(id_player,struttura_associata)
 var first_time = true;
 var def_color = "#070d12";
+var noplay_color = "#c2c2a3";
 var colors_vec = ["#ff0000", "#00ff00", "#0000ff", "#ff33cc", "#ffff00", "#00ccff", "#ff6600", "#ff9999", "#996600", "#660066", "#ccff33", "#009999"];
 var colors_index = 0;
 var rec_mat = []; //matrice rettangoli
 var col_mat = []; //matrice con vettori di colori dei giocatori
+var token_num = new Map(); //associa una cella e il numero_token in quella
 
 /*functions*/
 function createInputBox()
@@ -26,7 +28,7 @@ function createInputBox()
     txt2.placeholder = "PORT";
     txt2.id = "port";
     var but = document.createElement("input");
-    but.type = "button";
+    but.type = "submit";
     but.value = "GO";
     but.addEventListener("click", function(){connect();});
 
@@ -63,12 +65,14 @@ function drawPoints()
 }
 function drawTime(turns_left, ms_turn)
 {
-    var tempo = turns_left * ms_turn / 1000;
+    var tempo = (turns_left * ms_turn / 1000).toFixed(2);
     document.getElementById("time").appendChild(document.createTextNode("Time: "+tempo));
 }
 function drawMatrix(matrix, tokens)
 {
+    token_num.clear();
     var canvas = document.getElementById("myCan");
+
     for(var i=0; i<matrix.length; i++)
     {
         for(var j=0; j<matrix[i].length; j++)
@@ -76,18 +80,29 @@ function drawMatrix(matrix, tokens)
             //disegna campo e scia
             var good_color = def_color;
             if(matrix[i][j] !== null)
-                good_color = players.get(matrix[i][j]).color;
-            if(rec_mat[i][j].color != good_color)
-                rec_mat[i][j] = drawRect(canvas, rec_mat[i][j].pos_x, rec_mat[i][j].pos_y, rec_mat[i][j].width, rec_mat[i][j].height, good_color);
+            {
+                if(players.has(matrix[i][j]))
+                    good_color = players.get(matrix[i][j]).color;
+                else
+                    good_color = noplay_color;
+            }
+            rec_mat[i][j] = drawRect(canvas, rec_mat[i][j].pos_x, rec_mat[i][j].pos_y, rec_mat[i][j].width, rec_mat[i][j].height, good_color);
 
             //disegna i token
+            var pos = "";
+            pos = pos.concat(i,j);
             for(var k=0; k<tokens.length; k++)
             {
-                if(tokens[k].x == i && tokens[k].y == j)
+                if(tokens[k].x == j && tokens[k].y == i)
                 {
-                    if(rec_mat[i][j].color != "#FFFFFF")
-                        rec_mat[i][j] = drawRect(canvas, rec_mat[i][j].pos_x, rec_mat[i][j].pos_y, rec_mat[i][j].width, rec_mat[i][j].height, "#FFFFFF");
-                    break;
+                    if(token_num.has(pos))
+                    {
+                        var n = token_num.get(pos);
+                        token_num.set(pos,++n);
+                    }
+                    else
+                        token_num.set(pos,1);
+                    rec_mat[i][j] = drawToken(canvas, rec_mat[i][j].pos_x, rec_mat[i][j].pos_y, rec_mat[i][j].width, rec_mat[i][j].height, rec_mat[i][j].color);
                 }
             }
             //disegna players
@@ -148,10 +163,24 @@ function drawGridFromMat(canvas)
         var h = canvas.height/rec_mat.length;
         for(var j=0; j<rec_mat[i].length; j++)
         {
-            rec_mat[i][j] = drawRect(canvas, w*j, h*i, w, h, rec_mat[i][j].color);
+            var pos = "";
+            pos = pos.concat(i,j);
+            if(!token_num.has(pos))
+                rec_mat[i][j] = drawRect(canvas, w*j, h*i, w, h, rec_mat[i][j].color);
+            else
+                rec_mat[i][j] = drawToken(canvas, w*j, h*i, w, h, rec_mat[i][j].color);
             drawPlayer(canvas, j, i);
         }
     }
+}
+function drawToken(canvas, pos_x, pos_y, width, height, color)
+{
+    var pos = "";
+    pos = pos.concat(pos_y, pos_x);
+    var ret = drawRect(canvas, pos_x, pos_y, width, height, color);
+    drawRect(canvas, pos_x+width*0.2, pos_y+height*0.2, width*0.6, height*0.6, "#FFFFFF");
+    drawText(canvas, token_num.get(pos), pos_x+width*0.2, pos_y+height*0.2+height/2, "#000000");
+    return ret;
 }
 function drawPlayer(canvas, pos_x, pos_y)
 {
@@ -197,6 +226,13 @@ function drawCircle(canvas, pos_x, pos_y, radius, colors_arr)
         ctx.lineWidth = 1;
         ctx.stroke();
     }
+}
+function drawText(canvas, text, pos_x, pos_y, color)
+{
+    var ctx = canvas.getContext('2d');
+    ctx.font = '1px sans-serif';
+    ctx.fillStyle = color;
+    ctx.fillText(text, pos_x, pos_y);
 }
 function assignColor()
 {
