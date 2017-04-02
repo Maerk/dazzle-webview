@@ -21,7 +21,7 @@ function connect()
     socket = new WebSocket("ws://" + ip + ":" + port);
     // Connection opened
     socket.addEventListener('open', function (event) {
-        socket.send('Hello Server!');
+        socket.send('{"HandShake":"Viewer"}');
     });
     // Listen for messages
     socket.addEventListener('message', function (event) {
@@ -33,6 +33,11 @@ function connect()
     /*socket.addEventListener('error', function (event) {
         manageError(event.data);
     });*/
+}
+function manageError(data)
+{
+    alert(data);
+    disconnect();
 }
 function parseData(data_json)
 {
@@ -47,8 +52,18 @@ function parseData(data_json)
         disconnect();
         return;
     }
-
+    if(data_obj.Error != "undefined")
+    {
+        manageError(data_obj.Error);
+        return;
+    }
+    if(data_obj == "Ok")
+    {
+        alert("CONNECTED");
+        return;
+    }
     //init col_mat or clean
+
     for(var i=0; i<data_obj.grid.length; i++)
     {
         if(first_time)
