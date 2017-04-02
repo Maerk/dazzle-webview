@@ -54,13 +54,36 @@ function drawPoints()
     var node = document.getElementById("points");
     var val = players.values();
     var it = val.next();
+    var arr_points = [];
+    var map_points = new Map();
     while(!it.done)
     {
-        var subnode = document.createElement("div");
-        subnode.appendChild(document.createTextNode(it.value.name + ": " + it.value.points));
-        subnode.style = "color: " + it.value.color + ";";
-        node.appendChild(subnode);
+        arr_points.push(it.value.points);
+        if(!map_points.has(it.value.points))
+        {
+            var arr_tmp = [];
+            var obj = {name:it.value.name, color:it.value.color};
+            arr_tmp.push(obj);
+            map_points.set(it.value.points,arr_tmp);
+        }
+        else
+        {
+            var obj = {name:it.value.name, color:it.value.color};
+            map_points.set(it.value.points, map_points.get(it.value.points).push(obj));
+        }
         it = val.next();
+    }
+    arr_points.sort();
+    for(var i=arr_points.length-1; i>=0; i--)
+    {
+        var arr_obj = map_points.get(arr_points[i]);
+        for(var j=0; j<arr_obj.length; j++)
+        {
+            var subnode = document.createElement("div");
+            subnode.appendChild(document.createTextNode(arr_obj[j].name + ": " + arr_points[i]));
+            subnode.style = "color: " + arr_obj[j].color + ";";
+            node.appendChild(subnode);
+        }
     }
 }
 function drawTime(turns_left, ms_turn)
