@@ -19,11 +19,11 @@ var colors_vec = [
         "#5B4534", "#FDE8DC", "#404E55", "#0089A3", "#CB7E98", "#A4E804", "#324E72", "#6A3A4C",
         "#83AB58", "#001C1E", "#D1F7CE", "#004B28", "#C8D0F6", "#A3A489", "#806C66", "#222800",
         "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
-        "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#FEFFE6" ];
+        "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379" ];
 var colors_index = 0;
 var rec_mat = []; //matrice rettangoli
 var col_mat = []; //matrice con vettori di colori dei giocatori
-var token_num = new Map(); //associa una cella e il numero_token in quella
+var token_num = new Map(); //associa una cella e il numero_token in quella (sono sempre 1)
 
 /*functions*/
 function createInputBox()
@@ -120,12 +120,12 @@ function drawMatrix(matrix, tokens)
             {
                 if(tokens[k].x == j && tokens[k].y == i)
                 {
-                    if(token_num.has(pos))
+                   /*if(token_num.has(pos))
                     {
                         var n = token_num.get(pos);
                         token_num.set(pos,++n);
                     }
-                    else
+                    else*/
                         token_num.set(pos,1);
                     rec_mat[i][j] = drawToken(canvas, rec_mat[i][j].pos_x, rec_mat[i][j].pos_y, rec_mat[i][j].width, rec_mat[i][j].height, rec_mat[i][j].color, pos);
                 }
@@ -202,7 +202,7 @@ function drawToken(canvas, pos_x, pos_y, width, height, color, pos)
 {
     var ret = drawRect(canvas, pos_x, pos_y, width, height, color);
     drawRect(canvas, pos_x+width*0.2, pos_y+height*0.2, width*0.6, height*0.6, "#FFFFFF");
-    drawText(canvas, token_num.get(pos), pos_x+width*0.47, pos_y+height*0.7, height*0.5, "#000000");
+    drawText(canvas, "T", pos_x+width*0.35, pos_y+height*0.7, height*0.5, "#000000");
     return ret;
 }
 function drawPlayer(canvas, pos_x, pos_y)
