@@ -1,6 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+* 
+*        Copyright 2018 Marco De Nicolo
+*/
 
 //{ "players": [ { "name": "lollete", "points": 420, "position": { "x": 1,"y": 0},"id": 321 },{ "name": "lollo", "points": 426, "position": { "x": 1,"y": 0},"id": 322 },{ "name": "nino", "points": 26, "position": { "x": 1,"y": 0},"id": 323 }],"grid": [[ null, null,null,null ], [ 321, null,null,321 ],[ null, null,null,null ],[ null, null,null,null ],[ null, null,null,null ],[ null, null,null,null ],[ null, null,null,null ],[ null, 322,null,null ],[ null, 322,null,321 ]], "turns_left": 4, "ms_for_turn": 100, "tokens": [{ "x": 1,"y": 1 },{"x": 1, "y": 2}]}
 
